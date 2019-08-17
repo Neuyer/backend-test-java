@@ -1,5 +1,6 @@
 package br.com.estacionamento.estacionamento.controller;
 
+
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.estacionamento.estacionamento.model.Veiculo;
@@ -25,7 +27,7 @@ public class VeiculoController {
 		this.repository = veiculoRepository;
 	}
 	
-	@RequestMapping //essa anotação invoca o metodo com base na uri
+	@RequestMapping(method=RequestMethod.GET) //essa anotação invoca o metodo com base na uri
 	public List<Veiculo> findAll() {
 		return repository.findAll();
 	}
@@ -36,6 +38,7 @@ public class VeiculoController {
 	           .map(record -> ResponseEntity.ok().body(record))
 	           .orElse(ResponseEntity.notFound().build());
 	}
+	
 	
 	@PostMapping
 	public Veiculo create(@RequestBody Veiculo veiculo){

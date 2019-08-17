@@ -1,16 +1,16 @@
 package br.com.estacionamento.estacionamento.model;
 
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
 public class Veiculo {
 	
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) 
 	private Long id;
 	
 	@NotEmpty
@@ -23,11 +23,12 @@ public class Veiculo {
 	private String placa;
 	@NotEmpty
 	private String tipo;
+	@ManyToOne
+	private Estabelecimento estacionamento;
 	
-	public Long getId() {
-		return id;
+	public Veiculo() {
+		super();
 	}
-	
 	public String getMarca() {
 		return marca;
 	}

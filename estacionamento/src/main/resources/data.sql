@@ -1,3 +1,4 @@
+    
 DROP TABLE IF EXISTS Estabelecimento;
  
 CREATE TABLE Estabelecimento (
@@ -14,4 +15,3 @@ CREATE TABLE Estabelecimento (
  
 insert into Estabelecimento (nome, cnpj, telefone, qt_vagas_motos, qt_vagas_carros)
 values('VagasMil', '12345646', '1354632', 2, 1);
-

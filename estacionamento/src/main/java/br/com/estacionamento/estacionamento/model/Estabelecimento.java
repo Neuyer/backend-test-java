@@ -1,13 +1,16 @@
 package br.com.estacionamento.estacionamento.model;
 
+
+
+
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
-
-import java.util.*;
 
 @Entity
 public class Estabelecimento {
@@ -22,8 +25,8 @@ public class Estabelecimento {
 	private String endereco;
 	@NotEmpty
 	private String telefone;
-	@ManyToOne
-	private Veiculo veiculo;
+	@OneToMany(mappedBy="estacionamento")
+	private List<Veiculo> veiculos;
 	@NotEmpty
 	private int qtVagasCarros = 0;
 	@NotEmpty
@@ -49,14 +52,6 @@ public class Estabelecimento {
 	
 	public void setEndereco(String endereco) {
 		this.endereco = endereco;
-	}
-	
-	public Veiculo getVeiculos() {
-		return veiculo;
-	}
-	
-	public void setVeiculos(Veiculo veiculo) {
-		this.veiculo = veiculo;
 	}
 
 	public long getId() {
@@ -101,5 +96,15 @@ public class Estabelecimento {
 	public void setQtVagasMotos(int qtVagasMotos) {
 		this.qtVagasMotos = qtVagasMotos;
 	}
+
+	public List<Veiculo> getVeiculos() {
+		return veiculos;
+	}
+
+	public void setVeiculos(Veiculo veiculos) {
+		this.veiculos.add(veiculos);
+	}
+	
+	
 	
 }

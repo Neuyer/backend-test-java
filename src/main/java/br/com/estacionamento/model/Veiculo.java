@@ -1,5 +1,6 @@
-package br.com.estacionamento.estacionamento.model;
+package br.com.estacionamento.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,19 +13,19 @@ public class Veiculo {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) 
 	private Long id;
-	
 	@NotEmpty
 	private String marca;
 	@NotEmpty
 	private String modelo;
 	@NotEmpty
 	private String cor;
+	@Column(unique=true)
 	@NotEmpty
 	private String placa;
 	@NotEmpty
 	private String tipo;
 	@ManyToOne
-	private Estabelecimento estacionamento;
+	private EntradaSaida entradaSaida;
 	
 	public Veiculo() {
 		super();

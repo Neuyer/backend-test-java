@@ -20,7 +20,7 @@ public class EntradaSaidaService {
 		estabelecimentos.findById(eId).ifPresent(c->{
 			EntradaSaida entradaSaida = new EntradaSaida(c);
 			veiculos.findById(vId).ifPresent(v->{
-				entradaSaida.setVeiculos(v);
+				entradaSaida.setVeiculo(v);
 			});
 		});
 	}

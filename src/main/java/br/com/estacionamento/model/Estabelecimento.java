@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
@@ -18,6 +19,8 @@ public class Estabelecimento {
 	private String nome;
 	@NotEmpty
 	private String cnpj;
+	@OneToOne(mappedBy="estabelecimento")
+	private EntradaSaida entradaSaida;
 	@NotEmpty
 	private String endereco;
 	@NotEmpty

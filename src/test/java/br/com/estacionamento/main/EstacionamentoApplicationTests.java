@@ -1,4 +1,4 @@
-package br.com.estacionamento.estacionamento;
+package br.com.estacionamento.main;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

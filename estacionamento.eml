@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inheritJdk="true">
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$"/>
+	<lib name="junit-4.12.jar" scope="COMPILE">
+		<srcroot url="file://$M2_REPO$/junit/junit/4.12/junit-4.12-sources.jar"/>
+	</lib>
+	<lib name="hamcrest-core-1.3.jar" scope="COMPILE">
+		<srcroot url="file://$M2_REPO$/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3-sources.jar"/>
+	</lib>
+	<lib name="hamcrest-library-1.3.jar" scope="COMPILE">
+		<srcroot url="file://$M2_REPO$/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3-sources.jar"/>
+	</lib>
+</component>

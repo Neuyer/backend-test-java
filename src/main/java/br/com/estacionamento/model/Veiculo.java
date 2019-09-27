@@ -1,26 +1,18 @@
 package br.com.estacionamento.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
 public class Veiculo {
-	
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) 
-	private Long id;
+
 	@NotEmpty
 	private String marca;
 	@NotEmpty
 	private String modelo;
 	@NotEmpty
 	private String cor;
-	@Column(unique=true)
-	@NotEmpty
+	@Id
 	private String placa;
 	@NotEmpty
 	private String tipo;

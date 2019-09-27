@@ -8,38 +8,19 @@ import javax.persistence.OneToOne;
 
 @Entity
 public class EntradaSaida {
-	@Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@OneToOne
 	private Estabelecimento estabelecimento;
 	@OneToOne
 	private Veiculo veiculo;
+
+	public EntradaSaida(){
+
+	}
 	
-	public EntradaSaida(Long id, Estabelecimento estabelecimento, Veiculo veiculo) {
-		super();
-		this.id = id;
+	public EntradaSaida( Estabelecimento estabelecimento, Veiculo veiculo) {
 		this.estabelecimento = estabelecimento;
-		this.veiculo = veiculo;
-	}
-	public EntradaSaida(Estabelecimento estabelecimento) {
-		this.estabelecimento =estabelecimento;
-	}
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public Estabelecimento getEstabelecimento() {
-		return estabelecimento;
-	}
-	public void setEstabelecimento(Estabelecimento estabelecimento) {
-		this.estabelecimento = estabelecimento;
-	}
-	public Veiculo getVeiculo() {
-		return veiculo;
-	}
-	public void setVeiculo(Veiculo veiculo) {
 		this.veiculo = veiculo;
 	}
 	

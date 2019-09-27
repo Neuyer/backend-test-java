@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import br.com.estacionamento.model.Veiculo;
 import br.com.estacionamento.repository.VeiculoRepository;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 public class VeiculoService {
@@ -24,12 +25,16 @@ public class VeiculoService {
 		return veiculoRepository.findAll();
 	}
 	
-	public ResponseEntity<Veiculo> buscaPorId(@PathVariable long id){
-	   return veiculoRepository.findById(id)
-	           .map(record -> ResponseEntity.ok().body(record))
-	           .orElse(ResponseEntity.notFound().build());
+	public ResponseEntity<Veiculo> buscaPorId(@PathVariable long id) {
+		return veiculoRepository.findById(id)
+				.map(record -> ResponseEntity.ok().body(record))
+				.orElse(ResponseEntity.notFound().build());
 	}
-	
+		public ResponseEntity<Veiculo> buscaPorPlaca(@PathVariable String placa){
+			return veiculoRepository.findByPlaca(placa)
+					.map(record -> ResponseEntity.ok().body(record))
+					.orElse(ResponseEntity.notFound().build());
+		}
 	public Veiculo create(@RequestBody Veiculo veiculo){
 	   return veiculoRepository.save(veiculo);
 	}
@@ -37,13 +42,13 @@ public class VeiculoService {
 	public ResponseEntity<Veiculo> update(@PathVariable("id") long id,
 	                                      @RequestBody Veiculo veiculo) {
 	   return veiculoRepository.findById(id)
-	           .map(record -> {
-	               record.setMarca(veiculo.getMarca());
-	               record.setModelo(veiculo.getModelo());
-	               record.setCor(veiculo.getCor());
-	               record.setPlaca(veiculo.getPlaca());
-	               record.setTipo(veiculo.getTipo());
-	               Veiculo updated = veiculoRepository.save(record);
+	           .map(nveiculo -> {
+	        	   nveiculo.setMarca(veiculo.getMarca());
+	        	   nveiculo.setModelo(veiculo.getModelo());
+	        	   nveiculo.setCor(veiculo.getCor());
+	        	   nveiculo.setPlaca(veiculo.getPlaca());
+	        	   nveiculo.setTipo(veiculo.getTipo());
+	               Veiculo updated = veiculoRepository.save(nveiculo);
 	               return ResponseEntity.ok().body(updated);
 	           }).orElse(ResponseEntity.notFound().build());
 	}

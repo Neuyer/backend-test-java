@@ -32,7 +32,11 @@ public class EstabelecimentoService {
 	public ResponseEntity<Estabelecimento> buscaEstabelecimentoPorId(@PathVariable long id) {
 		return repository.findById(id).map(record -> ResponseEntity.ok().body(record))
 				.orElse(ResponseEntity.notFound().build());
-	 
+	}
+
+	public ResponseEntity<Estabelecimento> buscaEstabelecimentoPorCnpj(@PathVariable("cnpj") String cnpj) {
+		return repository.findByCnpj(cnpj).map(record -> ResponseEntity.ok().body(record))
+				.orElse(ResponseEntity.notFound().build());
 	}
 
 	public Estabelecimento create(@RequestBody Estabelecimento estabelecimento) {

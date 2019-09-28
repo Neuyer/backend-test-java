@@ -20,11 +20,6 @@ public class VeiculoController {
 	public List<Veiculo> findAll() {
 		return veiculoService.findAll();
 	}
-	
-	@GetMapping("/{id}")
-	public ResponseEntity<Veiculo> buscaPorId(@PathVariable long id){
-	   return veiculoService.buscaPorId(id);
-	}
 
 	@GetMapping("/?placa={placa}")
 	ResponseEntity<Veiculo> buscaPorPlaca(@PathVariable String placa){return veiculoService.buscaPorPlaca(placa);}
@@ -34,14 +29,14 @@ public class VeiculoController {
 	   return veiculoService.create(veiculo);
 	}
 	
-	@PutMapping(value="/{id}")
-	public ResponseEntity<Veiculo> update(@PathVariable("id") long id,
+	@PutMapping(value="/{placa}")
+	public ResponseEntity<Veiculo> update(@PathVariable("placa") String placa,
 	                                      @RequestBody Veiculo veiculo) {
-	   return veiculoService.update(id, veiculo);
+	   return veiculoService.update(placa, veiculo);
 	}
 	
-	@DeleteMapping(path ={"/{id}"})
-	public ResponseEntity<?> delete(@PathVariable long id) {
-	   return veiculoService.delete(id);
+	@DeleteMapping(path ={"/{placa}"})
+	public ResponseEntity<?> delete(@PathVariable String placa) {
+	   return veiculoService.delete(placa);
 	}
 }

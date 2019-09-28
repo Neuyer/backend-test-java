@@ -1,5 +1,8 @@
 package br.com.estacionamento.service;
 
+import br.com.estacionamento.enums.Mensagens;
+import br.com.estacionamento.enums.TipoEvento;
+import br.com.estacionamento.enums.TiposVeiculos;
 import br.com.estacionamento.exceptions.EstabelecimentoNaoEncontradoException;
 import br.com.estacionamento.exceptions.VagasEsgotadasException;
 import br.com.estacionamento.exceptions.VeiculoNaoEncontradoException;
@@ -14,65 +17,64 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
-    @Service
-    public class SaidaService {
-        private static final String TIPO_CARRO = "carro";
-        private static final String SUCESSO = "sucesso!";
-        private Logger log = LoggerFactory.getLogger(this.getClass());
-        @Autowired
-        private EstabelecimentoRepository estabelecimentos;
-        @Autowired
-        private VeiculoRepository veiculos;
-        @Autowired
-        private EntradaSaidaRepository entradaSaidaRepository;
+import java.time.LocalDateTime;
 
 
-        public void checaVagasCarro(Estabelecimento estabelecimento)throws Exception{
-            if(estabelecimento.getQtVagasCarros()>0){
-                estabelecimento.setQtVagasCarros(estabelecimento.getQtVagasCarros()-1);
-            }else{
-                throw new VagasEsgotadasException();
-            }
+@Service
+public class SaidaService {
+    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private TiposVeiculos tiposVeiculos;
+    private TipoEvento tipoEvento;
+    private Mensagens mensagens;
+    @Autowired
+    private EstabelecimentoRepository estabelecimentos;
+    @Autowired
+    private VeiculoRepository veiculos;
+    @Autowired
+    private EntradaSaidaRepository entradaSaidaRepository;
+
+
+    public void checaVagasCarro(Estabelecimento estabelecimento) throws Exception {
+        if (estabelecimento.getQtVagasCarros() > 0) {
+            estabelecimento.setQtVagasCarros(estabelecimento.getQtVagasCarros() - 1);
+        } else {
+            throw new VagasEsgotadasException();
         }
+    }
 
-        public void checaVagasMoto(Estabelecimento estabelecimento)throws Exception{
-            if(estabelecimento.getQtVagasMotos()>0){
-                estabelecimento.setQtVagasMotos(estabelecimento.getQtVagasMotos()-1);
-            }else{
-                throw new VagasEsgotadasException();
-            }
+    public void checaVagasMoto(Estabelecimento estabelecimento) throws Exception {
+        if (estabelecimento.getQtVagasMotos() > 0) {
+            estabelecimento.setQtVagasMotos(estabelecimento.getQtVagasMotos() - 1);
+        } else {
+            throw new VagasEsgotadasException();
         }
+    }
 
-        public void checaTipoVaga(Veiculo veiculo, Estabelecimento estabelecimento)throws Exception{
-            if(veiculo.getTipo().equals(TIPO_CARRO)){
-                checaVagasCarro(estabelecimento);
-            }else{
-                checaVagasMoto(estabelecimento);
-            }
+    public void checaTipoVaga(Veiculo veiculo, Estabelecimento estabelecimento) throws Exception {
+        if (veiculo.getTipo().equals(tiposVeiculos.CARRO.getDescricao())) {
+            checaVagasCarro(estabelecimento);
+        } else {
+            checaVagasMoto(estabelecimento);
         }
+    }
 
-        public void insereVeiculo(String cnpj, String placa ) throws Exception{
-            System.out.println("q merda");
-            try{
-
-                estabelecimentos.findByCnpj(cnpj).orElseThrow(EstabelecimentoNaoEncontradoException::new);
-                veiculos.findByPlaca(placa).orElseThrow(VeiculoNaoEncontradoException::new);
-                estabelecimentos.findByCnpj(cnpj).ifPresent(c->{
-                    veiculos.findByPlaca(placa).ifPresent(v->{
-                        try {
-                            checaTipoVaga(v,c);
-                            EntradaSaida entradaSaida = new EntradaSaida(c,v);
-                            entradaSaidaRepository.save(entradaSaida);
-                            log.info(SUCESSO);
-                        } catch (Exception e) {
-                            e.getMessage();
-                            e.printStackTrace();
-                        }
-                    });
-                });
-            }catch (Exception erro){
-                log.info(erro.getMessage());
+    public void insereVeiculo(String cnpj, String placa) throws Exception {
+        LocalDateTime data = LocalDateTime.now();
+        String tipo = tipoEvento.ENTRADA.getDescriçao();
+        try {
+            Estabelecimento estabelecimento = estabelecimentos.findByCnpj(cnpj).orElseThrow(EstabelecimentoNaoEncontradoException::new);
+            Veiculo veiculo = veiculos.findByPlaca(placa).orElseThrow(VeiculoNaoEncontradoException::new);
+            try {
+                checaTipoVaga(veiculo, estabelecimento);
+                EntradaSaida entradaSaida = new EntradaSaida(estabelecimento, veiculo, data, tipo);
+                entradaSaidaRepository.save(entradaSaida);
+                log.info(mensagens.EVENTO_REGISTRADO_SUCESSO.getDescricao());
+            } catch (Exception e) {
+                e.getMessage();
+                e.printStackTrace();
             }
+        } catch (Exception erro) {
+            log.info(erro.getMessage());
         }
+    }
 }

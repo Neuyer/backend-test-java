@@ -2,6 +2,8 @@ package br.com.estacionamento.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -12,7 +14,8 @@ import br.com.estacionamento.model.Estabelecimento;
 import br.com.estacionamento.repository.EstabelecimentoRepository;
 @Service
 public class EstabelecimentoService {
-	
+
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private EstabelecimentoRepository repository;
 
@@ -23,12 +26,7 @@ public class EstabelecimentoService {
 	public List<Estabelecimento> buscaTodos() {
 		return repository.findAll();
 	}
-	
-	public ResponseEntity<Estabelecimento> entra(@PathVariable long id) {
-		    ResponseEntity<Estabelecimento> e = buscaEstabelecimentoPorId(id);
-		return e;
-	}
-	
+
 	public ResponseEntity<Estabelecimento> buscaEstabelecimentoPorId(@PathVariable long id) {
 		return repository.findById(id).map(record -> ResponseEntity.ok().body(record))
 				.orElse(ResponseEntity.notFound().build());

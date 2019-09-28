@@ -4,6 +4,7 @@ import br.com.estacionamento.enums.Mensagens;
 import br.com.estacionamento.enums.TipoEvento;
 import br.com.estacionamento.enums.TiposVeiculos;
 import br.com.estacionamento.exceptions.EstabelecimentoNaoEncontradoException;
+import br.com.estacionamento.exceptions.EventoNaoEncontradoException;
 import br.com.estacionamento.exceptions.VagasEsgotadasException;
 import br.com.estacionamento.exceptions.VeiculoNaoEncontradoException;
 import br.com.estacionamento.model.EntradaSaida;
@@ -21,7 +22,7 @@ import java.time.LocalDateTime;
 
 
 @Service
-public class SaidaService {
+public class EntradaSaidaService {
     private Logger log = LoggerFactory.getLogger(this.getClass());
     private TiposVeiculos tiposVeiculos;
     private TipoEvento tipoEvento;
@@ -58,7 +59,7 @@ public class SaidaService {
         }
     }
 
-    public void insereVeiculo(String cnpj, String placa) throws Exception {
+    public void registraEntrada(String cnpj, String placa) throws Exception {
         LocalDateTime data = LocalDateTime.now();
         String tipo = tipoEvento.ENTRADA.getDescriçao();
         try {
@@ -75,6 +76,18 @@ public class SaidaService {
             }
         } catch (Exception erro) {
             log.info(erro.getMessage());
+        }
+    }
+
+    public void registraSaida(String placa) throws Exception{
+        LocalDateTime data = LocalDateTime.now();
+        String tipo = tipoEvento.SAIDA.getDescriçao();
+        try {
+            EntradaSaida EventoEntrada = entradaSaidaRepository.findByVeiculoPlaca(placa).orElseThrow(EventoNaoEncontradoException::new);
+            EntradaSaida EventoSaida = new EntradaSaida(EventoEntrada.getEstabelecimento(), EventoEntrada.getVeiculo(), data, tipo);
+            entradaSaidaRepository.save(EventoSaida);
+        }catch (EventoNaoEncontradoException e){
+            log.info(e.getMessage());
         }
     }
 }

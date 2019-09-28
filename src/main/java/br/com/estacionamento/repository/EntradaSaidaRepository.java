@@ -1,8 +1,11 @@
 package br.com.estacionamento.repository;
+import br.com.estacionamento.model.Estabelecimento;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.com.estacionamento.model.EntradaSaida;
 
-public interface EntradaSaidaRepository extends JpaRepository<EntradaSaida, Long>  {
+import java.util.Optional;
 
+public interface EntradaSaidaRepository extends JpaRepository<EntradaSaida, Long>  {
+    Optional<EntradaSaida> findByVeiculoPlaca(String placa);
 }

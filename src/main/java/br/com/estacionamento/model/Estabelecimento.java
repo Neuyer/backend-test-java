@@ -16,14 +16,14 @@ public class Estabelecimento {
 	@NotEmpty
 	private String nome;
 	@Id
-	@Pattern(regexp = "\\d{2}.?\\d{3}.?\\d{3}/?\\d{4}-?\\d{2}")
+	@Pattern(regexp = "\\d{14}")
 	private String cnpj;
 	@OneToOne(mappedBy="estabelecimento")
 	private EntradaSaida entradaSaida;
 	@NotEmpty
 	private String endereco;
 	@NotEmpty
-	@Pattern(regexp = "^(\\(\\d{2}\\)?\\s?|\\d{2}(\\-|\\s))?\\d{2,5}(\\-|\\s)?\\d{4,5}$")
+	@Pattern(regexp = "\\d{11}")
 	private String telefone;
 	@NotNull
 	private Integer qtVagasCarros = 0;

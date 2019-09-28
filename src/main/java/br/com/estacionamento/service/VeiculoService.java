@@ -2,6 +2,9 @@ package br.com.estacionamento.service;
 
 import java.util.List;
 
+import br.com.estacionamento.enums.Mensagens;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -14,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 public class VeiculoService {
+    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private Mensagens mensagem;
     @Autowired
     private VeiculoRepository veiculoRepository;
 

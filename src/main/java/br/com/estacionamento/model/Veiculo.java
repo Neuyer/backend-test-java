@@ -22,7 +22,6 @@ public class Veiculo {
 	private EntradaSaida entradaSaida;
 	
 	public Veiculo() {
-		super();
 	}
 	public String getMarca() {
 		return marca;

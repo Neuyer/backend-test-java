@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Entity
 public class EntradaSaida {
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	@OneToOne
 	private Estabelecimento estabelecimento;
@@ -26,5 +26,12 @@ public class EntradaSaida {
 		this.data = data;
 		this.tipoEvento = tipo;
 	}
-	
+
+	public Veiculo getVeiculo() {
+		return veiculo;
+	}
+
+	public Estabelecimento getEstabelecimento() {
+		return estabelecimento;
+	}
 }

@@ -2,6 +2,7 @@ package br.com.estacionamento.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 
 @Entity
 public class Veiculo {
@@ -13,6 +14,7 @@ public class Veiculo {
 	@NotEmpty
 	private String cor;
 	@Id
+	@Pattern(regexp = "^(([a-zA-Z]{3})?([0-9]{4}))$")
 	private String placa;
 	@NotEmpty
 	private String tipo;

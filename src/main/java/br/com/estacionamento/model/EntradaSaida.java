@@ -14,7 +14,7 @@ public class EntradaSaida implements Serializable {
 	private Veiculo veiculo;
 	private LocalDateTime data;
 	private String tipoEvento;
-	private boolean status;
+	private boolean ativo;
 
 	public EntradaSaida(){
 
@@ -25,7 +25,7 @@ public class EntradaSaida implements Serializable {
 		this.veiculo = veiculo;
 		this.data = data;
 		this.tipoEvento = tipo;
-		this.status = status;
+		this.ativo = status;
 	}
     public EntradaSaida( Estabelecimento estabelecimento, Veiculo veiculo, LocalDateTime data, String tipo) {
         this.estabelecimento = estabelecimento;
@@ -34,15 +34,39 @@ public class EntradaSaida implements Serializable {
         this.tipoEvento = tipo;
     }
 
-    public Long getId() {
-        return id;
-    }
-    public Veiculo getVeiculo() {
-		return veiculo;
+    public EntradaSaida(EntradaSaida entradaSaida, LocalDateTime data,String tipo){
+		this.veiculo = entradaSaida.getVeiculo();
+		this.estabelecimento = entradaSaida.getEstabelecimento();
+		this.data = data;
+		this.tipoEvento= tipo;
+	}
+
+	public Long getId() {
+		return id;
 	}
 
 	public Estabelecimento getEstabelecimento() {
 		return estabelecimento;
+	}
+
+	public Veiculo getVeiculo() {
+		return veiculo;
+	}
+
+	public LocalDateTime getData() {
+		return data;
+	}
+
+	public String getTipoEvento() {
+		return tipoEvento;
+	}
+
+	public boolean isAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(boolean status){
+		this.ativo = status;
 	}
 
 }

@@ -14,12 +14,12 @@ public class EntradaSaidaController {
 	private EntradaSaidaService controle;
 
 	@PostMapping
-	public ResponseEntity<EntradaSaidaDTO> insereVeiculo(@RequestParam("cnpj") String cnpj, @RequestParam("placa") String placa) throws Exception {
+	public ResponseEntity<?> insereVeiculo(@RequestParam("cnpj") String cnpj, @RequestParam("placa") String placa) throws Exception {
 			return controle.registraEntrada(cnpj, placa);
 	}
 
 	@PutMapping
-	public void  removeVeiculo(@RequestParam("placa") String placa) throws Exception {
-		controle.registraSaida(placa);
+	public void  removeVeiculo(@RequestParam("idEntrada") Long idEntrada) throws Exception {
+		controle.registraSaida(idEntrada);
 	}
 }

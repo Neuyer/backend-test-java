@@ -23,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -50,8 +51,9 @@ public class EntradaSaidaService {
     private EntradaSaidaDTO toDto(EntradaSaida entradaSaida){
         ModelMapper modelMapper = new ModelMapper();
         EntradaSaidaDTO entradaSaidaDto = modelMapper.map(entradaSaida,EntradaSaidaDTO.class);
+        return entradaSaidaDto;
     }
-    
+
     private void checaVagasCarro(Estabelecimento estabelecimento) throws Exception {
         if (estabelecimento.getQtVagasCarros() > 0) {
             estabelecimento.setQtVagasCarros(estabelecimento.getQtVagasCarros() - 1);
@@ -76,19 +78,25 @@ public class EntradaSaidaService {
         }
     }
 
-    public ResponseEntity<EntradaSaidaDTO> registraEntrada(String cnpj, String placa) throws Exception {
+    public boolean checaEventoAtivo(String placa) {
+        List<EntradaSaida> eventos = entradaSaidaRepository.findAllByVeiculoPlaca(placa);
+        return eventos.stream().anyMatch(c -> c.isAtivo());
+    }
+    public ResponseEntity<?> registraEntrada(String cnpj, String placa) throws Exception {
         LocalDateTime data = LocalDateTime.now();
         String tipo = tipoEvento.ENTRADA.getDescriçao();
+        if(checaEventoAtivo(placa)){
+           return new ResponseEntity<String>("Evento já Registrado e ativo!",HttpStatus.BAD_REQUEST);
+        }
         try {
             Estabelecimento estabelecimento = estabelecimentos.findByCnpj(cnpj).orElseThrow(EstabelecimentoNaoEncontradoException::new);
             Veiculo veiculo = veiculos.findByPlaca(placa).orElseThrow(VeiculoNaoEncontradoException::new);
             try {
                 checaTipoVaga(veiculo, estabelecimento);
-                EntradaSaida entradaSaida = new EntradaSaida(estabelecimento, veiculo, data, tipo);
+                EntradaSaida entradaSaida = new EntradaSaida(estabelecimento, veiculo, data, tipo,true);
                 entradaSaidaRepository.save(entradaSaida);
-                EntradaSaidaDTO entradaSaidaDTO = new EntradaSaidaDTO(entradaSaida);
                 log.info(mensagens.EVENTO_REGISTRADO_SUCESSO.getDescricao());
-                return  new ResponseEntity<EntradaSaidaDTO>(entradaSaidaDTO,HttpStatus.CREATED);
+                return  new ResponseEntity<EntradaSaidaDTO>(toDto(entradaSaida),HttpStatus.CREATED);
             } catch (Exception e) {
                 e.getMessage();
                 e.printStackTrace();
@@ -100,15 +108,17 @@ public class EntradaSaidaService {
         return  new ResponseEntity<EntradaSaidaDTO>(HttpStatus.BAD_REQUEST);
     }
 
-    public void registraSaida(String placa) throws Exception{
+    public ResponseEntity<EntradaSaidaDTO> registraSaida(Long id) throws Exception{
         LocalDateTime data = LocalDateTime.now();
         String tipo = tipoEvento.SAIDA.getDescriçao();
         try {
-            EntradaSaida EventoEntrada = entradaSaidaRepository.findByVeiculoPlaca(placa).orElseThrow(EventoNaoEncontradoException::new);
-            EntradaSaida EventoSaida = new EntradaSaida(EventoEntrada.getEstabelecimento(), EventoEntrada.getVeiculo(), data, tipo);
-            entradaSaidaRepository.save(EventoSaida);
+            EntradaSaida eventoEntrada = entradaSaidaRepository.findById(id).orElseThrow(EventoNaoEncontradoException::new);
+            EntradaSaida eventoSaida = new EntradaSaida(eventoEntrada, data, tipo);
+            entradaSaidaRepository.save(eventoSaida);
+            return  new ResponseEntity<EntradaSaidaDTO>(toDto(eventoSaida),HttpStatus.CREATED);
         }catch (EventoNaoEncontradoException e){
             log.info(e.getMessage());
+            return  new ResponseEntity<EntradaSaidaDTO>(HttpStatus.NOT_FOUND);
         }
     }
 }

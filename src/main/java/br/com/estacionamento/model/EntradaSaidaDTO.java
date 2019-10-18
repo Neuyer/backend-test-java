@@ -3,15 +3,33 @@ package br.com.estacionamento.model;
 public class EntradaSaidaDTO {
     private Long id;
     private String cnpjEstabelecimento;
-    private String placaveiculo;
+    private String placaVeiculo;
     public  EntradaSaidaDTO(){
 
     }
-    public EntradaSaidaDTO(EntradaSaida entrada){
 
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public EntradaSaidaDTO novoEntradaSaidaDTO(EntradaSaida entrada){
-        return new EntradaSaidaDTO(entrada);
+    public void setCnpjEstabelecimento(String cnpjEstabelecimento) {
+        this.cnpjEstabelecimento = cnpjEstabelecimento;
     }
+
+    public void setPlacaVeiculo(String placaVeiculo) {
+        this.placaVeiculo = placaVeiculo;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getCnpjEstabelecimento() {
+        return cnpjEstabelecimento;
+    }
+
+    public String getPlacaVeiculo() {
+        return placaVeiculo;
+    }
+
 }

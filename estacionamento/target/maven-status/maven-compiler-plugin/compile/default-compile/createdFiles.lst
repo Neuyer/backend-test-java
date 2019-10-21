@@ -1,5 +1,6 @@
 br\com\estacionamento\estacionamento\EstacionamentoApplication.class
 br\com\estacionamento\estacionamento\controller\VeiculoController.class
+br\com\estacionamento\estacionamento\config\SwaggerConfig.class
 br\com\estacionamento\estacionamento\repository\EstabelecimentoRepository.class
 br\com\estacionamento\estacionamento\controller\EstabelecimentoController.class
 br\com\estacionamento\estacionamento\repository\VeiculoRepository.class

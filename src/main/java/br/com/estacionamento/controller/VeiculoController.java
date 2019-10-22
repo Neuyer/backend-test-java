@@ -16,12 +16,12 @@ public class VeiculoController {
 	@Autowired
 	private VeiculoService veiculoService;
 	
-	@RequestMapping(method=RequestMethod.GET) //essa anotação invoca o metodo com base na uri
+	@GetMapping //essa anotação invoca o metodo com base na uri
 	public List<Veiculo> findAll() {
 		return veiculoService.findAll();
 	}
 
-	@GetMapping("/?placa={placa}")
+	@GetMapping(value="/{placa}")
 	ResponseEntity<Veiculo> buscaPorPlaca(@PathVariable String placa){return veiculoService.buscaPorPlaca(placa);}
 
 	@PostMapping

@@ -26,7 +26,7 @@ public class EstabelecimentoController {
 	 
 	}
 
-	@GetMapping("/?cnpj={cnpj}")
+	@GetMapping("/{cnpj}")
 	public ResponseEntity<Estabelecimento> buscaEstabelecimentoPorCnpj(@PathVariable String cnpj) {
 		return estabelecimentoService.buscaEstabelecimentoPorCnpj(cnpj);
 
@@ -43,7 +43,7 @@ public class EstabelecimentoController {
 		return estabelecimentoService.update(id, estabelecimento);
 	}
 
-	@DeleteMapping(path = { "/estabelecimentos/{id}" })
+	@DeleteMapping(value = { "/{id}" })
 	public ResponseEntity<?> delete(@PathVariable long id) {
 		return estabelecimentoService.delete(id);
 	}

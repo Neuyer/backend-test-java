@@ -3,6 +3,7 @@ package br.com.estacionamento.controller;
 import br.com.estacionamento.model.Estabelecimento;
 import br.com.estacionamento.service.EstabelecimentoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,12 +19,6 @@ public class EstabelecimentoController {
 	@GetMapping
 	public List<Estabelecimento> buscaTodos() {
 		return estabelecimentoService.buscaTodos();
-	}
-	
-	@GetMapping("/{id}")
-	public ResponseEntity<Estabelecimento> buscaEstabelecimentoPorId(@PathVariable long id) {
-		return estabelecimentoService.buscaEstabelecimentoPorId(id);
-	 
 	}
 
 	@GetMapping("/{cnpj}")
@@ -43,8 +38,10 @@ public class EstabelecimentoController {
 		return estabelecimentoService.update(id, estabelecimento);
 	}
 
-	@DeleteMapping(value = { "/{id}" })
-	public ResponseEntity<?> delete(@PathVariable long id) {
-		return estabelecimentoService.delete(id);
+	@DeleteMapping(value = { "/{cnpj}" })
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	public String delete(@PathVariable String cnpj) {
+		return estabelecimentoService.delete(cnpj);
 	}
 }

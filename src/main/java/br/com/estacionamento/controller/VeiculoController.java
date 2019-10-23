@@ -4,6 +4,7 @@ package br.com.estacionamento.controller;
 import br.com.estacionamento.model.Veiculo;
 import br.com.estacionamento.service.VeiculoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,21 +23,27 @@ public class VeiculoController {
 	}
 
 	@GetMapping(value="/{placa}")
-	ResponseEntity<Veiculo> buscaPorPlaca(@PathVariable String placa){return veiculoService.buscaPorPlaca(placa);}
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	Veiculo buscaPorPlaca(@PathVariable String placa) throws Exception {return veiculoService.buscaPorPlaca(placa);}
 
 	@PostMapping
+	@ResponseBody
 	public Veiculo create(@RequestBody Veiculo veiculo){
 	   return veiculoService.create(veiculo);
 	}
 	
 	@PutMapping(value="/{placa}")
-	public ResponseEntity<Veiculo> update(@PathVariable("placa") String placa,
+	@ResponseBody
+	public Veiculo update(@PathVariable("placa") String placa,
 	                                      @RequestBody Veiculo veiculo) {
 	   return veiculoService.update(placa, veiculo);
 	}
-	
+
 	@DeleteMapping(path ={"/{placa}"})
-	public ResponseEntity<?> delete(@PathVariable String placa) {
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	public String delete(@PathVariable String placa) {
 	   return veiculoService.delete(placa);
 	}
 }

@@ -8,6 +8,11 @@ public class EntradaSaidaDTO {
 
     }
 
+    public EntradaSaidaDTO(String cnpjEstabelecimento, String placaVeiculo) {
+        this.cnpjEstabelecimento = cnpjEstabelecimento;
+        this.placaVeiculo = placaVeiculo;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

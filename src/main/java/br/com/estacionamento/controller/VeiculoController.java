@@ -31,6 +31,7 @@ public class VeiculoController {
 
 	@PostMapping
 	@ResponseBody
+	@ResponseStatus(HttpStatus.CREATED)
 	public Veiculo create(@RequestBody Veiculo veiculo)throws Exception{
 	   return veiculoService.create(veiculo);
 	}

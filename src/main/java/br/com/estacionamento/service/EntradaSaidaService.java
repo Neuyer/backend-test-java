@@ -3,10 +3,7 @@ package br.com.estacionamento.service;
 import br.com.estacionamento.enums.Mensagens;
 import br.com.estacionamento.enums.TipoEvento;
 import br.com.estacionamento.enums.TiposVeiculos;
-import br.com.estacionamento.exceptions.EstabelecimentoNaoEncontradoException;
-import br.com.estacionamento.exceptions.EventoNaoEncontradoException;
-import br.com.estacionamento.exceptions.VagasEsgotadasException;
-import br.com.estacionamento.exceptions.VeiculoNaoEncontradoException;
+import br.com.estacionamento.exceptions.*;
 import br.com.estacionamento.model.EntradaSaida;
 import br.com.estacionamento.model.EntradaSaidaDTO;
 import br.com.estacionamento.model.Estabelecimento;
@@ -82,30 +79,30 @@ public class EntradaSaidaService {
         List<EntradaSaida> eventos = entradaSaidaRepository.findAllByVeiculoPlaca(placa);
         return eventos.stream().anyMatch(c -> c.isAtivo());
     }
-    public ResponseEntity<?> registraEntrada(String cnpj, String placa) throws Exception {
+    public EntradaSaida registraEntrada(EntradaSaidaDTO entrada) throws Exception {
         LocalDateTime data = LocalDateTime.now();
         String tipo = tipoEvento.ENTRADA.getDescriçao();
-        if(checaEventoAtivo(placa)){
-           return new ResponseEntity<String>("Evento já Registrado e ativo!",HttpStatus.BAD_REQUEST);
+        if(checaEventoAtivo(entrada.getPlacaVeiculo())){
+           throw new EventoJaRegistradoException();
         }
         try {
-            Estabelecimento estabelecimento = estabelecimentos.findByCnpj(cnpj).orElseThrow(EstabelecimentoNaoEncontradoException::new);
-            Veiculo veiculo = veiculos.findByPlaca(placa).orElseThrow(VeiculoNaoEncontradoException::new);
+            Estabelecimento estabelecimento = estabelecimentos.findByCnpj(entrada.getCnpjEstabelecimento()).orElseThrow(EstabelecimentoNaoEncontradoException::new);
+            Veiculo veiculo = veiculos.findByPlaca(entrada.getPlacaVeiculo()).orElseThrow(VeiculoNaoEncontradoException::new);
             try {
                 checaTipoVaga(veiculo, estabelecimento);
                 EntradaSaida entradaSaida = new EntradaSaida(estabelecimento, veiculo, data, tipo,true);
-                entradaSaidaRepository.save(entradaSaida);
                 log.info(mensagens.EVENTO_REGISTRADO_SUCESSO.getDescricao());
-                return  new ResponseEntity<EntradaSaidaDTO>(toDto(entradaSaida),HttpStatus.CREATED);
+               return entradaSaidaRepository.save(entradaSaida);
+
             } catch (Exception e) {
                 e.getMessage();
                 e.printStackTrace();
-                return  new ResponseEntity<EntradaSaidaDTO>(HttpStatus.CONFLICT);
+                throw new ErroAoRegistrarException();
             }
         } catch (Exception e) {
             log.info(e.getMessage());
+            throw new ErroAoRegistrarException();
         }
-        return  new ResponseEntity<EntradaSaidaDTO>(HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<EntradaSaidaDTO> registraSaida(Long id) throws Exception{

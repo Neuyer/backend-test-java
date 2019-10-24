@@ -23,6 +23,14 @@ public class Veiculo {
 	
 	public Veiculo() {
 	}
+
+	public Veiculo(@NotEmpty String marca, @NotEmpty String modelo, @NotEmpty String cor, @NotEmpty String tipo) {
+		this.marca = marca;
+		this.modelo = modelo;
+		this.cor = cor;
+		this.tipo = tipo;
+	}
+
 	public String getMarca() {
 		return marca;
 	}

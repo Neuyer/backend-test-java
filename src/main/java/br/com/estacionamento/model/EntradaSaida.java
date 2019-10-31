@@ -1,5 +1,8 @@
 package br.com.estacionamento.model;
 
+import br.com.estacionamento.enums.Estacionado;
+import br.com.estacionamento.enums.TipoEvento;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -13,28 +16,28 @@ public class EntradaSaida implements Serializable {
 	@OneToOne
 	private Veiculo veiculo;
 	private LocalDateTime data;
-	private String tipoEvento;
-	private boolean ativo;
+	private TipoEvento tipoEvento;
+	private Estacionado estacionado;
 
 	public EntradaSaida(){
 
 	}
 	
-	public EntradaSaida( Estabelecimento estabelecimento, Veiculo veiculo, LocalDateTime data, String tipo, boolean status) {
+	public EntradaSaida(Estabelecimento estabelecimento, Veiculo veiculo, LocalDateTime data, TipoEvento tipo, Estacionado status) {
 		this.estabelecimento = estabelecimento;
 		this.veiculo = veiculo;
 		this.data = data;
 		this.tipoEvento = tipo;
-		this.ativo = status;
+		this.estacionado = status;
 	}
-    public EntradaSaida( Estabelecimento estabelecimento, Veiculo veiculo, LocalDateTime data, String tipo) {
+    public EntradaSaida(Estabelecimento estabelecimento, Veiculo veiculo, LocalDateTime data, TipoEvento tipo) {
         this.estabelecimento = estabelecimento;
         this.veiculo = veiculo;
         this.data = data;
         this.tipoEvento = tipo;
     }
 
-    public EntradaSaida(EntradaSaida entradaSaida, LocalDateTime data,String tipo){
+    public EntradaSaida(EntradaSaida entradaSaida, LocalDateTime data, TipoEvento tipo){
 		this.veiculo = entradaSaida.getVeiculo();
 		this.estabelecimento = entradaSaida.getEstabelecimento();
 		this.data = data;
@@ -57,16 +60,11 @@ public class EntradaSaida implements Serializable {
 		return data;
 	}
 
-	public String getTipoEvento() {
+	public TipoEvento getTipoEvento() {
 		return tipoEvento;
 	}
 
-	public boolean isAtivo() {
-		return ativo;
+	public Estacionado getEstacionado() {
+		return estacionado;
 	}
-
-	public void setAtivo(boolean status){
-		this.ativo = status;
-	}
-
 }

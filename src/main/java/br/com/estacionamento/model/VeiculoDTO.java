@@ -1,12 +1,15 @@
 package br.com.estacionamento.model;
 
+import br.com.estacionamento.enums.TiposVeiculos;
+
 import javax.validation.constraints.Pattern;
 
 public class VeiculoDTO {
     private String marca;
     private String modelo;
     private String cor;
-    private String tipo;
+    private TiposVeiculos tipo;
+    private String placa;
 
     public VeiculoDTO( ){
 
@@ -36,11 +39,19 @@ public class VeiculoDTO {
         this.cor = cor;
     }
 
-    public String getTipo() {
+    public TiposVeiculos getTipo() {
         return tipo;
     }
 
-    public void setTipo(String tipo) {
+    public void setTipo(TiposVeiculos tipo) {
         this.tipo = tipo;
+    }
+
+    public String getPlaca() {
+        return placa;
+    }
+
+    public void setPlaca(String placa) {
+        this.placa = placa;
     }
 }

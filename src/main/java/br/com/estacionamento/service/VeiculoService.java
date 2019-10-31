@@ -5,6 +5,7 @@ import java.util.Map;
 
 import br.com.estacionamento.enums.Mensagens;
 import br.com.estacionamento.exceptions.ErroAoRegistrarException;
+import br.com.estacionamento.exceptions.VeiculoJaRegistradoException;
 import br.com.estacionamento.exceptions.VeiculoNaoEncontradoException;
 import br.com.estacionamento.model.VeiculoDTO;
 import org.modelmapper.ModelMapper;
@@ -40,10 +41,14 @@ public class VeiculoService {
     }
 
     public Veiculo create(Veiculo veiculo) {
+        if(veiculoRepository.findByPlaca(veiculo.getPlaca()).isPresent()){
+            throw new VeiculoJaRegistradoException();
+        }
         try{
             return veiculoRepository.save(veiculo);
         }
         catch (Exception e){
+            log.info(e.getMessage());
             throw new ErroAoRegistrarException();
         }
     }
@@ -55,6 +60,7 @@ public class VeiculoService {
          v.setModelo(veiculo.getModelo());
          v.setCor(veiculo.getCor());
          v.setTipo(veiculo.getTipo());
+         v.setPlaca(veiculo.getPlaca());
          log.info(mensagem.VEICULO_REGISTRADO_SUCESSO.getDescricao());
 
         try{

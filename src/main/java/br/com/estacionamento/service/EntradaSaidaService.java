@@ -1,5 +1,6 @@
 package br.com.estacionamento.service;
 
+import br.com.estacionamento.enums.Estacionado;
 import br.com.estacionamento.enums.Mensagens;
 import br.com.estacionamento.enums.TipoEvento;
 import br.com.estacionamento.enums.TiposVeiculos;
@@ -11,7 +12,6 @@ import br.com.estacionamento.model.Veiculo;
 import br.com.estacionamento.repository.EntradaSaidaRepository;
 import br.com.estacionamento.repository.EstabelecimentoRepository;
 import br.com.estacionamento.repository.VeiculoRepository;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 
@@ -36,6 +35,8 @@ public class EntradaSaidaService {
     private VeiculoRepository veiculos;
     @Autowired
     private EntradaSaidaRepository entradaSaidaRepository;
+    @Autowired
+    private MapperService mapper;
 
     public Boolean checaEntrada(Long id){
         Optional entrada = entradaSaidaRepository.findById(id);
@@ -46,8 +47,7 @@ public class EntradaSaidaService {
     }
 
     private EntradaSaidaDTO toDto(EntradaSaida entradaSaida){
-        ModelMapper modelMapper = new ModelMapper();
-        EntradaSaidaDTO entradaSaidaDto = modelMapper.map(entradaSaida,EntradaSaidaDTO.class);
+        EntradaSaidaDTO entradaSaidaDto = mapper.toEntradaSaidaDTO(entradaSaida);
         return entradaSaidaDto;
     }
 
@@ -68,7 +68,7 @@ public class EntradaSaidaService {
     }
 
     private void checaTipoVaga(Veiculo veiculo, Estabelecimento estabelecimento) throws Exception {
-        if (veiculo.getTipo().equals(tiposVeiculos.CARRO.getDescricao())) {
+        if (veiculo.getTipo().equals(tiposVeiculos.CARRO)) {
             checaVagasCarro(estabelecimento);
         } else {
             checaVagasMoto(estabelecimento);
@@ -76,12 +76,16 @@ public class EntradaSaidaService {
     }
 
     public boolean checaEventoAtivo(String placa) {
-        List<EntradaSaida> eventos = entradaSaidaRepository.findAllByVeiculoPlaca(placa);
-        return eventos.stream().anyMatch(c -> c.isAtivo());
+            EntradaSaida entradaSaida = entradaSaidaRepository.findByEstacionadoAndVeiculoPlaca(Estacionado.ESTACIONADO, placa);
+           if( entradaSaida== null){
+               return false;
+           }else{
+               return true;
+           }
     }
     public EntradaSaida registraEntrada(EntradaSaidaDTO entrada) throws Exception {
         LocalDateTime data = LocalDateTime.now();
-        String tipo = tipoEvento.ENTRADA.getDescriçao();
+        TipoEvento tipo = tipoEvento.ENTRADA;
         if(checaEventoAtivo(entrada.getPlacaVeiculo())){
            throw new EventoJaRegistradoException();
         }
@@ -90,7 +94,7 @@ public class EntradaSaidaService {
             Veiculo veiculo = veiculos.findByPlaca(entrada.getPlacaVeiculo()).orElseThrow(VeiculoNaoEncontradoException::new);
             try {
                 checaTipoVaga(veiculo, estabelecimento);
-                EntradaSaida entradaSaida = new EntradaSaida(estabelecimento, veiculo, data, tipo,true);
+                EntradaSaida entradaSaida = new EntradaSaida(estabelecimento, veiculo, data, tipo);
                 log.info(mensagens.EVENTO_REGISTRADO_SUCESSO.getDescricao());
                return entradaSaidaRepository.save(entradaSaida);
 
@@ -107,7 +111,7 @@ public class EntradaSaidaService {
 
     public ResponseEntity<EntradaSaidaDTO> registraSaida(Long id) throws Exception{
         LocalDateTime data = LocalDateTime.now();
-        String tipo = tipoEvento.SAIDA.getDescriçao();
+        TipoEvento tipo = tipoEvento.SAIDA;
         try {
             EntradaSaida eventoEntrada = entradaSaidaRepository.findById(id).orElseThrow(EventoNaoEncontradoException::new);
             EntradaSaida eventoSaida = new EntradaSaida(eventoEntrada, data, tipo);

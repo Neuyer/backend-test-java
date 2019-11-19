@@ -1,5 +1,6 @@
 package br.com.estacionamento.controller;
 
+import br.com.estacionamento.enums.MENSAGENS;
 import br.com.estacionamento.model.Estabelecimento;
 import br.com.estacionamento.service.EstabelecimentoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,39 +10,38 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @RestController
-@RequestMapping("/estabelecimentos")
+@RequestMapping("/estabelecimento")
 public class EstabelecimentoController {
 		
 	@Autowired
 	private EstabelecimentoService estabelecimentoService;
 
-
 	@GetMapping
-	public List<Estabelecimento> buscaTodos() {
-		return estabelecimentoService.buscaTodos();
+	public ResponseEntity<List<Estabelecimento>> findAll() {
+		return new ResponseEntity<>(estabelecimentoService.findAll(), HttpStatus.OK);
 	}
 
 	@GetMapping("/{cnpj}")
-	public ResponseEntity<Estabelecimento> buscaEstabelecimentoPorCnpj(@PathVariable String cnpj) {
-		return estabelecimentoService.buscaEstabelecimentoPorCnpj(cnpj);
-
+	public ResponseEntity<Estabelecimento> findByCnpj(@PathVariable String cnpj) {
+		Estabelecimento estabelecimento = estabelecimentoService.findByCnpj(cnpj);
+		return new ResponseEntity<>(estabelecimento, HttpStatus.OK);
 	}
 	
 	@PostMapping
-	public Estabelecimento create(@RequestBody Estabelecimento estabelecimento) {
-		return estabelecimentoService.create(estabelecimento);
+	public ResponseEntity<Estabelecimento> create(@RequestBody Estabelecimento estabelecimento) {
+		return new ResponseEntity<>(estabelecimentoService.create(estabelecimento), HttpStatus.CREATED);
 	}
 
-	@PutMapping("/{id}")
-	public ResponseEntity<Estabelecimento> update(@PathVariable("id") long id,
-			@RequestBody Estabelecimento estabelecimento) {
-		return estabelecimentoService.update(id, estabelecimento);
+	@PutMapping("/{cnpj}")
+	public ResponseEntity<Estabelecimento> update(@PathVariable String cnpj,
+	  		@RequestBody Estabelecimento estabelecimento) {
+		estabelecimento.setCnpj(cnpj);
+		return new ResponseEntity<>(estabelecimento, HttpStatus.OK);
 	}
 
-	@DeleteMapping(value = { "/{cnpj}" })
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	public String delete(@PathVariable String cnpj) {
-		return estabelecimentoService.delete(cnpj);
+	@DeleteMapping("/{cnpj}")
+	public ResponseEntity<String> delete(@PathVariable String cnpj) {
+		estabelecimentoService.delete(cnpj);
+		return new ResponseEntity<>(MENSAGENS.ESTABELECIMENTO_DELETADO_SUCESSO.getDescricao(), HttpStatus.OK);
 	}
 }

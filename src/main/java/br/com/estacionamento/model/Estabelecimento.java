@@ -34,7 +34,7 @@ public class Estabelecimento {
 		
 	}
 	
-	public Estabelecimento(long id, String nome, String cnpj, String telefone, int qtVagasCarros, int qtVagasMotos) {
+	public Estabelecimento(String nome, String cnpj, String telefone, int qtVagasCarros, int qtVagasMotos) {
 		super();
 		this.nome = nome;
 		this.cnpj = cnpj;

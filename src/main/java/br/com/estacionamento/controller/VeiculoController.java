@@ -1,9 +1,9 @@
 package br.com.estacionamento.controller;
 
 
-import br.com.estacionamento.enums.MENSAGENS;
-import br.com.estacionamento.model.Veiculo;
-import br.com.estacionamento.service.VeiculoService;
+import br.com.estacionamento.domain.entity.MENSAGENS;
+import br.com.estacionamento.domain.entity.veiculo.Veiculo;
+import br.com.estacionamento.application.VeiculoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,49 +1,59 @@
 package br.com.estacionamento.controller;
 
 
-import br.com.estacionamento.model.Veiculo;
-import br.com.estacionamento.service.VeiculoService;
+import br.com.estacionamento.domain.entity.MENSAGENS;
+import br.com.estacionamento.domain.entity.veiculo.Veiculo;
+import br.com.estacionamento.application.VeiculoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/veiculos")
+@RequestMapping("/veiculo")
 public class VeiculoController {
 	
 	@Autowired
 	private VeiculoService veiculoService;
 	
-	@GetMapping //essa anotação invoca o metodo com base na uri
-	public List<Veiculo> findAll() {
-		return veiculoService.findAll();
+	@GetMapping
+	public ResponseEntity<List<Veiculo>> findAll() {
+		return new ResponseEntity<>(veiculoService.findAll(), HttpStatus.OK);
 	}
 
-	@GetMapping(value="/{placa}")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	Veiculo buscaPorPlaca(@PathVariable String placa) throws Exception {return veiculoService.buscaPorPlaca(placa);}
+	@GetMapping("{îd}")
+	public ResponseEntity<Veiculo> findById(@PathVariable long id) {
+		Optional<Veiculo> veiculoOpt = veiculoService.findById(id);
+		return veiculoOpt.map(veiculo -> new ResponseEntity<>(veiculo, HttpStatus.OK))
+				.orElseGet(() -> ResponseEntity.notFound().build());
+	}
+
+	@GetMapping("/{placa}")
+	public ResponseEntity<Veiculo> findByPlaca(@PathVariable String placa) {
+		Veiculo veiculo = veiculoService.findByPlaca(placa);
+		if(!veiculo.getPlaca().isEmpty())
+			return new ResponseEntity<>(veiculo, HttpStatus.OK);
+
+		return ResponseEntity.notFound().build();
+	}
 
 	@PostMapping
-	@ResponseBody
-	public Veiculo create(@RequestBody Veiculo veiculo){
-	   return veiculoService.create(veiculo);
+	public ResponseEntity<Veiculo> create(@RequestBody Veiculo veiculo){
+		return new ResponseEntity<>(veiculoService.create(veiculo), HttpStatus.CREATED);
 	}
 	
-	@PutMapping(value="/{placa}")
-	@ResponseBody
-	public Veiculo update(@PathVariable("placa") String placa,
-	                                      @RequestBody Veiculo veiculo) {
-	   return veiculoService.update(placa, veiculo);
+	@PutMapping("/{placa}")
+	public ResponseEntity<Veiculo> update(@PathVariable String placa, @RequestBody Veiculo veiculo) {
+		veiculo.setPlaca(placa);
+	   return new ResponseEntity<>(veiculoService.update(veiculo), HttpStatus.OK);
 	}
 
-	@DeleteMapping(path ={"/{placa}"})
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	public String delete(@PathVariable String placa) {
-	   return veiculoService.delete(placa);
+	@DeleteMapping("/{placa}")
+	public ResponseEntity<String> delete(@PathVariable String placa) {
+		veiculoService.delete(placa);
+		return new ResponseEntity<>(MENSAGENS.VEICULO_DELETADO_COM_SUCESSO.getDescricao(), HttpStatus.OK);
 	}
 }

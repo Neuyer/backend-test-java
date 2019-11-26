@@ -12,11 +12,10 @@ import javax.validation.constraints.Pattern;
 @Entity
 public class Estabelecimento {
 
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
 	@NotEmpty
 	private String nome;
-	@Id
-	@GeneratedValue()
-	private long id;
 	private String cnpj;
 	@OneToOne(mappedBy="estabelecimento")
 	private RegistroEvento registroEvento;
@@ -27,15 +26,6 @@ public class Estabelecimento {
 	private Integer qtVagasCarros = 0;
 	@NotNull
 	private Integer qtVagasMotos = 0;
-
-	public Endereco getEndereco() {
-		return endereco;
-	}
-
-	public void setEndereco(Endereco endereco) {
-		this.endereco = endereco;
-	}
-
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "endereco_id", referencedColumnName = "id")
 	private Endereco endereco;
@@ -44,17 +34,20 @@ public class Estabelecimento {
 		
 	}
 
-	public Estabelecimento(String cnpj) {
-		cnpj = cnpj;
+	public Estabelecimento(EstabelecimentoCadastroDto estabelecimentoCadastroDto) {
+		nome = estabelecimentoCadastroDto.getNome();
+		cnpj = estabelecimentoCadastroDto.getCnpj();
+		telefone = estabelecimentoCadastroDto.getTelefone();
+		qtVagasCarros = estabelecimentoCadastroDto.getQtVagasCarros();
+		qtVagasMotos = estabelecimentoCadastroDto.getQtVagasMotos();
 	}
-	
-	public Estabelecimento(String nome, String cnpj, String telefone, int qtVagasCarros, int qtVagasMotos) {
-		super();
-		this.nome = nome;
-		this.cnpj = cnpj;
-		this.telefone = telefone;
-		this.qtVagasCarros = qtVagasCarros;
-		this.qtVagasMotos = qtVagasMotos;
+
+	public Endereco getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
 	}
 
 	public long getId() { return id; }

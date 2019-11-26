@@ -9,8 +9,7 @@ import javax.validation.constraints.Pattern;
 @Entity
 public class Veiculo {
 
-	@Id
-	@GeneratedValue
+	@Id @GeneratedValue
 	private long id;
 	@NotEmpty
 	private String marca;

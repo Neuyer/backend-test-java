@@ -7,6 +7,7 @@ import br.com.estacionamento.application.VeiculoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import br.com.estacionamento.domain.entity.veiculo.Veiculo;
 import br.com.estacionamento.domain.repository.VeiculoRepository;
@@ -43,6 +44,11 @@ public class VeiculoServiceImp implements VeiculoService {
         veiculoUpdate.setPlaca(veiculo.getPlaca());
         veiculoUpdate.setTipo(veiculo.getTipo());
         return veiculoUpdate;
+    }
+
+    @Override
+    public Optional<Veiculo> findByid(long id) {
+        return veiculoRepository.findById(id);
     }
 
     @Transactional

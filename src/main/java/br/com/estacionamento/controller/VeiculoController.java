@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/veiculo")
@@ -21,6 +22,13 @@ public class VeiculoController {
 	@GetMapping
 	public ResponseEntity<List<Veiculo>> findAll() {
 		return new ResponseEntity<>(veiculoService.findAll(), HttpStatus.OK);
+	}
+
+	@GetMapping("{îd}")
+	public ResponseEntity<Veiculo> findById(@PathVariable long id) {
+		Optional<Veiculo> veiculoOpt = veiculoService.findById(id);
+		return veiculoOpt.map(veiculo -> new ResponseEntity<>(veiculo, HttpStatus.OK))
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@GetMapping("/{placa}")
